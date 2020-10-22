@@ -1,0 +1,39 @@
+{
+  "name": "react-demo-app",
+  "version": "1.0.0",
+  "description": "react-demo-app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "prestart": "pm2 stop server.js",
+    "start": "pm2 start server.js",
+    "postinstall": "cd public/reactjs && npm install && npm run-script build",
+    "server": "nodemon server.js",
+    "client": "cd public/reactjs && npm start",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run dev",
+    "dev": "concurrently  \"npm run server\" \"npm run client\"",
+    "clean-dev": "kill -9 $(lsof -t -i:4001) && concurrently  \"npm run server\" \"npm run client\"",
+    "build": "cd public/reactjs && npm run-script build"
+  },
+  "author": "Vishal Ghodke",
+  "license": "ISC",
+  "dependencies": {
+    "await": "^0.2.6",
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "composable-middleware": "^0.3.0",
+    "concurrently": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.0",
+    "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.6",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^4.2.0",
+    "path": "^0.12.7",
+    "pusher": "^4.0.0"
+  }
+}

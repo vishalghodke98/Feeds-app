@@ -1,0 +1,52 @@
+.login {
+    margin-top: 50px;
+    border: 1px solid gray;
+    padding: 10px;
+    justify-items: center;
+    justify-content: space-around;
+}
+
+.btn_left {
+    width: 50%;
+}
+
+.change_viewbuttons {
+    display: flex;
+    border-radius: 20px;
+}
+
+.login_card {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    width: 500px;
+    margin-left: 500px;
+}
+
+.form_control {
+    width: 100%;
+}
+
+.form_inputes {
+    padding: 20px;
+}
+
+.forgot_pass_link {
+    text-align: right;
+    padding: 20px;
+}
+
+.btn_submit {
+    text-align: right;
+    padding: 20px;
+}
+
+.btn_right {
+ width: 50%;
+}
+
+.froms_input {
+    display: inline;
+    background-color: white;
+    box-shadow: thistle;
+}
