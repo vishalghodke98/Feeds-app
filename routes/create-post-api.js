@@ -53,11 +53,4 @@ module.exports = (app, connection) => {
             return res.status(500).send({ message: "Error updating with id=" + _id });
         });
     });
-
-    app.delete('/api/profile/:_id', (req, res) => {
-        ImageGalarry.deleteOne({ _id: req.params._id }, (deleteErr, deleteRes) => {
-            if (deleteErr) return res.status(400).json({ message: 'Error while deleting profile' });
-            return res.send({ message: 'Profile deleted sucessfully' });
-        });
-    });
 }

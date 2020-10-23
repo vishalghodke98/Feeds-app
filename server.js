@@ -47,7 +47,6 @@ const conn = mongoose.createConnection(conectionUrl, {
 let gfs
 
 conn.once('open', () => {
-  console.log('connected')
   gfs = Grid(conn.db, mongoose.mongo)
   gfs.collection('images')
 });

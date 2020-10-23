@@ -8,6 +8,7 @@ import axios from '../../util/axios';
 const Feed = () => {
     const [file, setFile] = useState(null);
     const [posts, setPosts] = useState([]);
+    const [user, setUser] = useState(localStorage.getItem('UserData') ? JSON.parse(localStorage.getItem('UserData')) : '');
 
     const handleGetPosts = () => {
         axios.get('/api/get_posts').then(response => {
@@ -23,7 +24,6 @@ const Feed = () => {
 
     const handleCreatePost = (data) => {
         axios.post('/api/create_post', data).then(response => {
-            console.log('response', response)
             handleGetPosts();
         }).catch(error => {
             console.log(error)
@@ -33,7 +33,6 @@ const Feed = () => {
     const handleLikeChange = (count, _id) => {
         let newPosts = [...posts];
         let index = newPosts.findIndex(obj => obj._id === _id);
-        console.log(index)
         newPosts[index].likes = count;
         setPosts(newPosts)
         axios.put(`/api/update_post/${_id}`, newPosts[index]).then(response => {
@@ -44,14 +43,12 @@ const Feed = () => {
     }
 
     const handleUpdateComments = (data, _id) => {
-        console.log('update', data, _id)
         let newPosts = [...posts];
         let index = newPosts.findIndex(obj => obj._id === _id);
-        console.log(index)
-        newPosts[index].comments.push({ comment: data, user: 'vaibhav' });
+        newPosts[index].comments.push({ comment: data, user: `${user.first_name} ${user.last_name}` });
         setPosts(newPosts)
         axios.put(`/api/update_post/${_id}`, newPosts[index]).then(response => {
-            handleGetPosts()
+            handleGetPosts();
         }).catch(error => {
             console.log(error)
         });

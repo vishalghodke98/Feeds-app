@@ -5,10 +5,66 @@ import { withStyles } from '@material-ui/styles';
 import './Login.css'
 import axios from '../../util/axios';
 import ReactBSAlert from "react-bootstrap-sweetalert";
+import { verifyEmail, verifyAlpha, verifyLength } from '../../util/helper';
 
 const styles = theme => ({
 
 });
+
+const SIGNUP_FIELDS = (state) => [
+    {
+        resultState: state.firstNameState,
+        placeholder: 'First Name',
+        name: 'firstName',
+        type: 'text',
+        condition: 'alpha',
+        errorMsg: 'Please valid first name.'
+    },
+    {
+        resultState: state.lastNameState,
+        placeholder: 'Last Name',
+        name: 'lastName',
+        type: 'text',
+        condition: 'alpha',
+        errorMsg: 'Please valid last name.'
+    },
+    {
+        resultState: state.emailState,
+        placeholder: 'Email Id',
+        name: 'email',
+        type: 'text',
+        condition: 'email',
+        errorMsg: 'Please enter a valid  email id.'
+    },
+    {
+        resultState: state.passwordState,
+        placeholder: 'Password',
+        name: 'password',
+        type: 'text',
+        condition: 'length',
+        errorMsg: 'Please enter a valid  password.'
+    }
+]
+
+
+const LOGIN_FIELDS = (state) => [
+    {
+        resultState: state.emailState,
+        placeholder: 'Email Id',
+        name: 'email',
+        type: 'text',
+        condition: 'email',
+        errorMsg: 'Please enter a valid  email id.'
+    },
+    {
+        resultState: state.passwordState,
+        placeholder: 'Password',
+        name: 'password',
+        type: 'text',
+        condition: 'length',
+        errorMsg: 'Please enter a valid  password.'
+    }
+]
 
 export class login extends Component {
     constructor(props) {
@@ -22,6 +78,10 @@ export class login extends Component {
             firstName: '',
             lastName: '',
             profile: '',
+            firstNameState: '',
+            lastNameState: '',
+            emailState: '',
+            passwordState: ''
         };
     }
 
@@ -39,24 +99,63 @@ export class login extends Component {
         });
     }
 
-    handleSetValues = (type, value) => {
-        console.log(type, value)
+    change = (event, stateName, type) => {
         switch (type) {
-            case 'email':
-                this.setState({ email: value });
+            case "length":
+                if (event.target.value.length >= 6) {
+                    this.setState({ [stateName + "State"]: "has-success" });
+                } else {
+                    this.setState({ [stateName + "State"]: "has-danger" });
+                }
                 break;
-            case 'password':
-                this.setState({ password: value });
+            case "email":
+                if (verifyEmail(event.target.value)) {
+                    this.setState({ [stateName + "State"]: "has-success" });
+                } else {
+                    this.setState({ [stateName + "State"]: "has-danger" });
+                }
                 break;
-            case 'firstName':
-                this.setState({ firstName: value });
-            case 'lastName':
-                this.setState({ lastName: value });
+            case "alpha":
+                if (verifyAlpha(event.target.value)) {
+                    this.setState({ [stateName + "State"]: "has-success" });
+                } else {
+                    this.setState({ [stateName + "State"]: "has-danger" });
+                }
                 break;
-        };
-    }
+            default:
+                break;
+        }
+        this.setState({ [stateName]: event.target.value });
+    };
+
+    isValidated = () => {
+        if (
+            (this.state.firstNameState === "has-success") &&
+            (this.state.lastNameState === "has-success") &&
+            (this.state.emailState === "has-success") &&
+            (this.state.passwordState === "has-success")
+        ) {
+            return true;
+        } else {
+            if (this.state.firstNameState !== "has-success") {
+                this.setState({ firstNameState: "has-danger" });
+            }
+            if (this.state.lastNameState !== "has-success") {
+                this.setState({ lastNameState: "has-danger" });
+            }
+            if (this.state.emailState !== "has-success") {
+                this.setState({ emailState: "has-danger" });
+            }
+            if (this.state.passwordState !== "has-success") {
+                this.setState({ passwordState: "has-danger" });
+            }
+            return false;
+        }
+    };
 
     handleSignUp = () => {
+        this.isValidated();
+        if (!this.state.profile) return this.handleResponsePopUp('Please Sselect profile', 'Error', false, true);
         const postData = {
             first_name: this.state.firstName,
             last_name: this.state.lastName,
@@ -64,12 +163,12 @@ export class login extends Component {
             email: this.state.email,
             profile: this.state.profile
         }
-
         const url = '/api/signup';
         axios.post(url, postData).then(response => {
             let localStorageData = response.data.data;
             let json = JSON.stringify(localStorageData);
             localStorage.setItem('UserData', json);
+            this.setState({ signup: false, login: true });
             return this.handleResponsePopUp(response.data.message, 'Success', true, false);
         }).catch(error => {
             return this.handleResponsePopUp(error.response.data.message, 'Error', false, true);
@@ -82,7 +181,6 @@ export class login extends Component {
             password: this.state.password,
             email: this.state.email
         }
-        console.log(postData)
         const url = '/api/signin';
         axios.post(url, postData).then(response => {
             let login = { login: true };
@@ -139,44 +237,6 @@ export class login extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { login, signup } = this.state;
-        const loginFields = [
-            {
-                inputLabel: 'Please Enter Email',
-                formHelperText: 'Please enter email.',
-                type: 'email',
-            },
-            {
-                inputLabel: 'Password',
-                formHelperText: 'Please enter last name',
-                type: 'password'
-            }
-        ]
-
-        const signupFields = [
-            {
-                inputLabel: 'First Name',
-                formHelperText: 'Please enter first name.',
-                type: 'firstName'
-            },
-            {
-                inputLabel: 'Last Name',
-                formHelperText: 'Please enter last name',
-                type: 'lastName'
-            },
-            {
-                inputLabel: 'Please Enter Email',
-                formHelperText: 'Please enter email.',
-                type: 'email',
-            },
-            {
-                inputLabel: 'Password',
-                formHelperText: 'Please enter last name',
-                type: 'password'
-            },
-        ]
-
         return (
             <>
                 {this.state.alert}
@@ -187,12 +247,22 @@ export class login extends Component {
                             <Button onClick={() => this.handleLoginFrom()} className='btn_right' variant="contained" color="primary">Sign In</Button>
                         </div>
                         <hr />
+
                         {this.state.signup ? <div className='form_inputes'>
-                            {signupFields && signupFields.map(field => {
+                            {SIGNUP_FIELDS && SIGNUP_FIELDS(this.state).map(field => {
                                 return <FormControl className='form_control'>
-                                    <InputLabel htmlFor="my-input">{field.inputLabel}</InputLabel>
-                                    <Input onChange={(event) => this.handleSetValues(field.type, event.target.value)} id="my-input" aria-describedby="my-helper-text" />
-                                    <FormHelperText id="my-helper-text">{field.formHelperText}</FormHelperText>
+                                    <InputLabel style={{ color: field.resultState === "has-danger" ? 'red' : '' }} htmlFor="my-input">{field.placeholder}</InputLabel>
+                                    <Input
+                                        onChange={e => this.change(e, field.name, field.condition, field.value)}
+                                        id="my-input"
+                                        aria-describedby="my-helper-text"
+                                        name={field.name}
+                                        value={this.state[field.name]}
+                                        type={field.type}
+                                    />
+                                    {field.resultState === "has-danger" ? (
+                                        <FormHelperText style={{ color: 'red' }} id="my-helper-text">{field.errorMsg}</FormHelperText>
+                                    ) : null}
                                 </FormControl>
                             })}
                             <FormGroup style={{ padding: '10px', margin: '10px', with: '60%', border: '2px grey dotted', alignItems: 'center' }}>
@@ -204,11 +274,20 @@ export class login extends Component {
                             </FormGroup>
                         </div> : null}
                         {this.state.login ? <div className='form_inputes'>
-                            {loginFields && loginFields.map(field => {
+                            {LOGIN_FIELDS && LOGIN_FIELDS(this.state).map(field => {
                                 return <FormControl className='form_control'>
-                                    <InputLabel htmlFor="my-input">{field.inputLabel}</InputLabel>
-                                    <Input onChange={(event) => this.handleSetValues(field.type, event.target.value)} id="my-input" aria-describedby="my-helper-text" />
-                                    <FormHelperText id="my-helper-text">{field.formHelperText}</FormHelperText>
+                                    <InputLabel style={{ color: field.resultState === "has-danger" ? 'red' : '' }} htmlFor="my-input">{field.placeholder}</InputLabel>
+                                    <Input
+                                        onChange={e => this.change(e, field.name, field.condition, field.value)}
+                                        id="my-input"
+                                        aria-describedby="my-helper-text"
+                                        name={field.name}
+                                        value={this.state[field.name]}
+                                        type={field.type}
+                                    />
+                                    {field.resultState === "has-danger" ? (
+                                        <FormHelperText style={{ color: 'red' }} id="my-helper-text">{field.errorMsg}</FormHelperText>
+                                    ) : null}
                                 </FormControl>
                             })}
                         </div> : null}
