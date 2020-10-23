@@ -21,6 +21,9 @@ const MessageSender = ({ handleCreatePost }) => {
             profile: user.profile
         }
         handleCreatePost(postData)
+        setFile(null);
+        setInput('');
+
     };
 
     const handleFileChange = (event) => {
@@ -63,7 +66,7 @@ const MessageSender = ({ handleCreatePost }) => {
                         type='submit'
                         onClick={handleSubmut}></button>
                 </form>
-                <Button color='success' className='submit_button' style={{ color: '#2e81f4', backgroundColor: '2e81f4' }} onClick={handleSubmut}>submit</Button>
+                <Button color="primary" className='submit_button' style={{ color: '#2e81f4', backgroundColor: '2e81f4' }} onClick={handleSubmut}>submit</Button>
             </div>
             <div className='messageSender_bottom'>
                 <div className='messageSender_option'>

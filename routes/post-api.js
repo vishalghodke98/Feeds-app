@@ -6,37 +6,37 @@ const path = require('path');
 const Grid = require('gridfs-stream');
 const mongoose = require("mongoose");
 
-const storage = new GridFsStorage({
-    url: process.env.conectionUrl,
-    file: (req, file) => {
-        return new Promise((resolve, reject) => {
-            const filename = `image-${Date.now()}${path.extname(file.originalname)}`
-            const fileInfo = {
-                filename: filename,
-                bucketName: 'images'
-            }
-            resolve(fileInfo);
-        }); l
-    }
-});
+// const storage = new GridFsStorage({
+//     url: process.env.conectionUrl,
+//     file: (req, file) => {
+//         return new Promise((resolve, reject) => {
+//             const filename = `image-${Date.now()}${path.extname(file.originalname)}`
+//             const fileInfo = {
+//                 filename: filename,
+//                 bucketName: 'images'
+//             }
+//             resolve(fileInfo);
+//         });
+//     }
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
-const conectionUrl = process.env.conectionUrl || 'mongodb+srv://admin:vishal1234@cluster0.yuwek.mongodb.net/you_book?retryWrites=true&w=majority';
+// const conectionUrl = process.env.conectionUrl || 'mongodb+srv://admin:vishal1234@cluster0.yuwek.mongodb.net/you_book?retryWrites=true&w=majority';
 
-const conn = mongoose.createConnection(conectionUrl, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+// const conn = mongoose.createConnection(conectionUrl, {
+//     useCreateIndex: true,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// });
 
-let gfs
+// let gfs
 
-conn.once('open', () => {
-    console.log('connected')
-    gfs = Grid(conn.db, mongoose.mongo)
-    gfs.collection('images')
-});
+// conn.once('open', () => {
+//     console.log('connected')
+//     gfs = Grid(conn.db, mongoose.mongo)
+//     gfs.collection('images')
+// });
 
 module.exports = (app, connection) => {
     app.get('/api/retriveimages/single1', (req, res) => {
@@ -48,10 +48,9 @@ module.exports = (app, connection) => {
             readstream.pipe(res);
         });
     });
-    app.post('/api/upload/image1', upload.single('file'), (req, res) => {
-        console.log('here------------')
-        res.send(req.file)
-    });
+    // app.post('/api/upload/image1', upload.single('file'), (req, res) => {
+    //     res.send(req.file)
+    // });
 
     app.post('/api/upload/post', (req, res) => {
         const dbpost = req.body;

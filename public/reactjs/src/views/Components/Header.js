@@ -18,13 +18,12 @@ const Header = () => {
         <>
             <div className='header'>
                 <div className='header_left'>
-                    <h3 className='header_name'>FEEDS</h3>
-                    {/* <img src='https://image.shutterstock.com/image-photo/valencia-spain-march-05-2017-260nw-593204357.jpg' /> */}
+                    <h3 className='header_name'>FEED</h3>
                 </div>
                 <div className='header_input'>
                     <SearchIcon />
                     <input
-                        placeholder='Search youbook....'
+                        placeholder='Search here....'
                         type='text'
                     />
                 </div>

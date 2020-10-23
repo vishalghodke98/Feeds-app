@@ -28,7 +28,6 @@ const Post = ({ profilePic, file, message, timestamp, likes, imgName, username, 
 
     const handleChangeLike = (count, _id) => {
         let like = parseInt(count)
-        console.log("likes", 4 + 1)
         handleLikeChange(like + 1, _id);
     }
 
@@ -65,13 +64,13 @@ const Post = ({ profilePic, file, message, timestamp, likes, imgName, username, 
                 </form>
             </div> : null}
             <div className='post_options'>
-                <div className='post_option'>
-                    <ThumbUpIcon onClick={() => handleChangeLike(likes, id)} />
+                <div className='post_option' onClick={() => handleChangeLike(likes, id)}>
+                    <ThumbUpIcon />
                     <p>{likes} Like</p>
                 </div>
                 <div className='post_option' onClick={() => handleChangeCommentView()}>
                     <ChatBubbleOutlineIcon />
-                    <p>Comment</p>
+                    <p>{comments.length ? comments.length : ''} Comment</p>
                 </div>
                 <div className='post_option'>
                     <NearMeIcon />
